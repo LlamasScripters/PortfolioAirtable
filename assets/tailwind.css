@@ -12,7 +12,6 @@ html {
     @apply bg-dark-background;
     height: stretch;
     width: stretch;
-    margin: 30px;
 }
 
 body {
