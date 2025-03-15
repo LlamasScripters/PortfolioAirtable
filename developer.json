@@ -1,6 +1,4 @@
 {
-    "name": "Micheal Weaver",
-    "logo_name": "micheal-weaver",
     "role": "Front-end developer",
     "about": {
         "sections": {
@@ -64,25 +62,8 @@
         "direct": {
             "title": "contacts",
             "sources": {
-                "email": "user@gmail.com",
+                "email": "LlamasScripters@gmail.com",
                 "phone": "+3598246359"
-            }
-        },
-        "social": {
-            "github": {
-                "title": "Github profile",
-                "url": "https://github.com/",
-                "user": "username"
-            },
-            "facebook": {
-                "title": "Facebook profile",
-                "url": "https://facebook.com/",
-                "user": "username"
-            },
-            "twitter": {
-                "title": "Twitter account",
-                "url": "https://twitter.com/",
-                "user": "username"
             }
         },
         "find_me_also_in": {

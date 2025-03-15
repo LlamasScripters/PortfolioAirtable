@@ -11,10 +11,10 @@
 				<span>
 					Hi all, I am
 				</span>
-				<h1>{{ config.name }}</h1>
+				<h1>Llama Scripter</h1>
         <span class="diple flex">
           >&nbsp;
-				<h2 class="line-1 anim-typewriter max-w-fit"> {{ config.role }} </h2>
+				<h2 class="line-1 anim-typewriter max-w-fit"> Full-Stack Developer </h2>
         </span>
 			</div>
 
@@ -38,8 +38,8 @@
 					<span class="operator">
 						=
 					</span>
-					<a class="string" :href="'https://github.com/' + config.contacts.social.github.user">
-						"https://github.com/{{ config.contacts.social.github.user }}"
+					<a target="_blank" class="string" :href="'https://github.com/LlamasScripters'">
+						"https://github.com/LlamasScripters"
 					</a>
 				</p>
 			</div>
@@ -80,6 +80,7 @@ function handleResize() {
 </script>
 
 <style scoped>
+
 #hello {
   display: flex;
   height: 100%;

@@ -3,7 +3,7 @@
       <nav class="w-full flex justify-between border-bot">
           <div class="flex">
             <NuxtLink id="nav-logo" to="/">
-              {{ config.logo_name }}
+              LlamasScripters
             </NuxtLink>
 
             <NuxtLink id="nav-link" to="/" :class="{ active: isActive('/') }">
@@ -30,7 +30,6 @@
 </template>
 
 <script setup>
-import config from '~/developer.json';
 
 const isActive = (route) => {
   return route === route;

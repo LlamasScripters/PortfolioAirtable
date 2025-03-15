@@ -3,8 +3,8 @@
         <div class="line-numbers lg:flex flex-col w-16 hidden">
 
             <!-- line numbers and asteriscs -->
-            <div v-for="n in lines" class="grid grid-cols-2 justify-end" :key="n">
-                <span class="col-span-1 mr-3">{{ n }}</span>
+            <div v-for="number in lines" class="grid grid-cols-2 justify-end" :key="number">
+                <span class="col-span-1 mr-3">{{ number }}</span>
             </div>
         </div>
         <div class="font-fira_retina text-white text-container">
