@@ -34,11 +34,6 @@ export default defineNuxtConfig({
         { hid: 'og:image', property: 'og:image', content: 'demo-share.jpg' },
         { hid: 'og:url', property: 'og:url', content: 'https://developer-portfolio-v1.netlify.app/' },
         { name: 'theme-color', content: '#010C15' },
-        // ...
-      ],
-      link: [
-        { rel: 'manifest', href: 'pwa/manifest.json' },
-        { rel: 'apple-touch-icon', href: 'pwa/icons/apple-touch-icon.png' },
       ],
     },
   },
@@ -78,9 +73,6 @@ export default defineNuxtConfig({
     // The private keys which are only available server-side
     apiSecret: '123',
     // Keys within public are also exposed client-side
-    public: {
-      apiBase: '/api',
-
-    }
+    AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
   }
 })
