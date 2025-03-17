@@ -70,8 +70,6 @@ export default defineNuxtConfig({
    * Usage: https://nuxt.com/docs/guide/going-further/runtime-config
    */
   runtimeConfig: {
-    // The private keys which are only available server-side
-    apiSecret: '123',
     // Keys within public are also exposed client-side
     AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
   }
