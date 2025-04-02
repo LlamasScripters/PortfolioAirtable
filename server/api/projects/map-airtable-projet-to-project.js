@@ -1,3 +1,5 @@
+// Project: map AirtableProjet to Project
+
 /**
  * @typedef {{
  * url: string,

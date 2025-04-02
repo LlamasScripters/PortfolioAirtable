@@ -1,3 +1,4 @@
+<!-- projects.vue -->
 <template>
   <main class="flex flex-col flex-auto lg:flex-row overflow-hidden">
     <div id="mobile-page-title">
@@ -5,34 +6,16 @@
     </div>
 
     <!-- section title (mobile) -->
-    <div
-      id="section-content-title"
-      class="flex lg:hidden"
-      @click="showFilters = !showFilters"
-    >
-      <img
-        :class="showFilters ? 'section-arrow rotate-90' : 'section-arrow'"
-        src="/icons/arrow.svg"
-      />
+    <div id="section-content-title" class="flex lg:hidden" @click="showFilters = !showFilters">
+      <img :class="showFilters ? 'section-arrow rotate-90' : 'section-arrow'" src="/icons/arrow.svg" />
       <span class="font-fira_regular text-white text-sm">projects</span>
     </div>
 
-    <div
-      v-if="showFilters"
-      id="filter-menu"
-      class="w-full flex-col border-right font-fira_regular text-menu-text lg:flex"
-    >
+    <div v-if="showFilters" id="filter-menu"
+      class="w-full flex-col border-right font-fira_regular text-menu-text lg:flex">
       <!-- title -->
-      <div
-        id="section-content-title"
-        class="hidden lg:flex items-center min-w-full"
-      >
-        <img
-          id="section-arrow-menu"
-          src="/icons/arrow.svg"
-          alt=""
-          class="section-arrow mx-3"
-        />
+      <div id="section-content-title" class="hidden lg:flex items-center min-w-full">
+        <img id="section-arrow-menu" src="/icons/arrow.svg" alt="" class="section-arrow mx-3" />
         <p class="font-fira_regular text-white text-sm">projects</p>
       </div>
 
@@ -44,22 +27,12 @@
         <div v-else-if="errorTechs" class="flex items-center py-2 text-red-500">
           <span>Error loading technologies: {{ errorTechs }}</span>
         </div>
-        <div
-          v-else
-          v-for="tech in techs"
-          :key="tech"
-          class="flex items-center py-2"
-        >
+        <div v-else v-for="tech in techs" :key="tech" class="flex items-center py-2">
           <input type="checkbox" :id="tech.id" @click="filterProjects(tech)" />
-          <img
-            :id="'icon-tech-' + tech.id"
-            :src="tech.icon"
-            :alt="tech.name"
-            class="tech-icon w-5 h-5 mx-4"
-          />
+          <img :id="'icon-tech-' + tech.id" :src="tech.icon" :alt="tech.name" class="tech-icon w-5 h-5 mx-4" />
           <label :for="tech" :id="'title-tech-' + tech.id">{{
             tech.name
-          }}</label>
+            }}</label>
         </div>
       </nav>
     </div>
@@ -70,11 +43,7 @@
       <!-- windows tab -->
       <div class="tab-height w-full hidden lg:flex border-bot items-center">
         <div class="flex items-center border-right h-full">
-          <p
-            v-for="filter in filters"
-            :key="filter.id"
-            class="font-fira_regular text-menu-text text-sm px-3"
-          >
+          <p v-for="filter in filters" :key="filter.id" class="font-fira_regular text-menu-text text-sm px-3">
             {{ filter.name }};
           </p>
           <img src="/icons/close.svg" alt="" class="m-3" />
@@ -86,27 +55,18 @@
         <span class="text-white"> // </span>
         <p class="font-fira_regular text-white text-sm px-3">projects</p>
         <span class="text-menu-text"> / </span>
-        <p
-          v-for="filter in filters"
-          :key="filter"
-          class="font-fira_regular text-menu-text text-sm px-3"
-        >
+        <p v-for="filter in filters" :key="filter" class="font-fira_regular text-menu-text text-sm px-3">
           {{ filter }};
         </p>
       </div>
 
       <!-- projects -->
-      <div
-        id="projects-case"
-        :class="[
-          'max-w-full h-full overflow-scroll lg:self-center',
-          projects.length > 0 ? 'grid grid-cols-1 lg:grid-cols-2' : '',
-        ]"
-      >
-        <div
-          v-if="!isLoading && projects.length === 0"
-          class="flex flex-col font-fira_retina text-menu-text my-5 h-full justify-center items-center col-span-full"
-        >
+      <div id="projects-case" :class="[
+        'max-w-full h-full overflow-scroll lg:self-center',
+        projects.length > 0 ? 'grid grid-cols-1 lg:grid-cols-2' : '',
+      ]">
+        <div v-if="!isLoading && projects.length === 0"
+          class="flex flex-col font-fira_retina text-menu-text my-5 h-full justify-center items-center col-span-full">
           <span class="flex justify-center text-4xl pb-3"> X__X </span>
           <span class="text-white flex justify-center text-xl">
             No matching projects
@@ -114,29 +74,15 @@
           <span class="flex justify-center"> for these technologies </span>
         </div>
 
-        <div
-          v-if="isLoading"
-          class="col-span-full flex justify-center items-center py-10"
-        >
-          <span class="animate-pulse text-white text-xl"
-            >Loading projects...</span
-          >
+        <div v-if="isLoading" class="col-span-full flex justify-center items-center py-10">
+          <span class="animate-pulse text-white text-xl">Loading projects...</span>
         </div>
 
-        <project-card
-          v-else
-          v-for="(project, index) in projects"
-          :index="index"
-          :project="project"
-        >
+        <project-card v-else v-for="(project, key) in projects" :key="key" :project="project">
           <template #tech-icons>
-            <project-card-tech-icon
-              v-for="tech in techs.filter((t) =>
-                project.technologies.includes(t.id)
-              )"
-              :key="tech"
-              :tech="tech"
-            />
+            <project-card-tech-icon v-for="tech in techs.filter((t) =>
+              project.technologies.includes(t.id)
+            )" :key="tech" :tech="tech" />
           </template>
         </project-card>
       </div>
