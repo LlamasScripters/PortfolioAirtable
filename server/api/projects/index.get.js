@@ -1,35 +1,51 @@
-const mockProjects = [
-  {
-    id: "proj1",
-    title: "Portfolio Website",
-    description:
-      "A modern portfolio website with dark theme and responsive design",
-    tech: ["rec1", "rec2"], // JavaScript and React
-    img: "https://picsum.photos/800/600?random=1",
-    url: "https://portfolio.example.com",
-  },
-  {
-    id: "proj2",
-    title: "Backend API Service",
-    description:
-      "RESTful API service with authentication and database integration",
-    tech: ["rec3", "rec4"], // Node.js and Python
-    img: "https://picsum.photos/800/600?random=2",
-    url: "https://api.example.com",
-  },
-  {
-    id: "proj3",
-    title: "Containerized Microservices",
-    description:
-      "Microservices architecture using containers and orchestration",
-    tech: ["rec3", "rec5"], // Node.js and Docker
-    img: "https://picsum.photos/800/600?random=3",
-    url: "https://microservices.example.com",
-  },
-];
+import { z } from "zod";
+import { mapAirtableProjetToProject } from "./map-airtable-projet-to-project";
 
-export default defineEventHandler(async () => {
-  // const projects = await airtable(airtableConfig.tables.Projet).select().all();
-  // return projects;
-  return mockProjects;
+const projectsQuerySchema = z.object({
+  technologies:
+    // union to handle query params with single value in technologies
+    z
+      .union([z.string().transform((str) => [str]), z.array(z.string())])
+      .optional(),
+});
+
+/**
+ * @typedef {z.infer<typeof projectsQuerySchema>} ProjectsQuery
+ */
+
+export default defineEventHandler(async (event) => {
+  const queryParseResult = await getValidatedQuery(event, (query) =>
+    projectsQuerySchema.safeParse(query)
+  );
+
+  if (!queryParseResult.success) {
+    console.error("Invalid query params:", queryParseResult.error);
+
+    // Invalid query params means we should return an empty array
+    return [];
+  }
+
+  const { technologies } = queryParseResult.data;
+
+  const queryOptions = {
+    view: airtableConfig.tables.Projet.views.default,
+  };
+
+  if (technologies && technologies.length > 0) {
+    const technologyFilters = technologies.map(
+      (tech) => `FIND('${tech}', ARRAYJOIN({Technologies}, ",")) > 0`
+    );
+
+    queryOptions.filterByFormula = `OR(${technologyFilters.join(",")})`;
+  }
+
+  const airtableProjects = await airtable(airtableConfig.tables.Projet.id)
+    .select(queryOptions)
+    .all();
+
+  const projects = airtableProjects.map((airtableProject) =>
+    mapAirtableProjetToProject(airtableProject)
+  );
+
+  return projects;
 });

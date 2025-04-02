@@ -98,11 +98,14 @@
       <!-- projects -->
       <div
         id="projects-case"
-        class="grid grid-cols-1 lg:grid-cols-2 max-w-full h-full overflow-scroll lg:self-center"
+        :class="[
+          'max-w-full h-full overflow-scroll lg:self-center',
+          projects.length > 0 ? 'grid grid-cols-1 lg:grid-cols-2' : '',
+        ]"
       >
         <div
-          id="not-found"
-          class="hidden flex flex-col font-fira_retina text-menu-text my-5 h-full justify-center items-center"
+          v-if="!isLoading && projects.length === 0"
+          class="flex flex-col font-fira_retina text-menu-text my-5 h-full justify-center items-center col-span-full"
         >
           <span class="flex justify-center text-4xl pb-3"> X__X </span>
           <span class="text-white flex justify-center text-xl">
@@ -111,14 +114,26 @@
           <span class="flex justify-center"> for these technologies </span>
         </div>
 
+        <div
+          v-if="isLoading"
+          class="col-span-full flex justify-center items-center py-10"
+        >
+          <span class="animate-pulse text-white text-xl"
+            >Loading projects...</span
+          >
+        </div>
+
         <project-card
-          v-for="(project, index) in filteredProjects"
+          v-else
+          v-for="(project, index) in projects"
           :index="index"
           :project="project"
         >
           <template #tech-icons>
             <project-card-tech-icon
-              v-for="tech in techs.filter((t) => project.tech.includes(t.id))"
+              v-for="tech in techs.filter((t) =>
+                project.technologies.includes(t.id)
+              )"
               :key="tech"
               :tech="tech"
             />
@@ -130,34 +145,58 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 
 const filters = ref([{ id: null, name: "all" }]);
 const showFilters = ref(true);
+const isLoading = ref(false);
 
+// Fetch technologies
 const {
   data: techs,
   error: errorTechs,
   status: statusTechs,
 } = await useTechnologies();
-const {
-  data: projects,
-  error: errorProjects,
-  status: statusProjects,
-} = await useProjects();
 
-const filteredProjects = computed(() => {
+const selectedTechNames = computed(() => {
   if (filters.value[0].id === null) {
-    return projects.value;
+    return [];
   }
-
-  return projects.value?.filter((project) => {
-    return filters.value.some((filter) => project.tech.includes(filter.id));
-  });
+  return filters.value.map((f) => f.name);
 });
 
+const fetchProjects = async () => {
+  isLoading.value = true;
+  try {
+    const { data, error } = await useProjects({
+      technologies: selectedTechNames.value,
+    });
+
+    projects.value = data.value;
+    errorProjects.value = error.value;
+  } catch (err) {
+    console.error("Error fetching projects:", err);
+    errorProjects.value = err.message;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const projects = ref([]);
+const errorProjects = ref(null);
+
+fetchProjects();
+
+watch(
+  selectedTechNames,
+  () => {
+    fetchProjects();
+  },
+  { deep: true }
+);
+
 /**
- *
+ * Handle filter selection
  * @param {object} tech
  * @param {string} tech.id
  * @param {string} tech.name
@@ -176,22 +215,6 @@ function filterProjects(tech) {
       filters.value.push({ id: null, name: "all" });
     }
   }
-
-  // Use filteredProjects.value.length instead
-  if (filteredProjects.value.length === 0) {
-    document.getElementById("projects-case").classList.remove("grid");
-    document.getElementById("not-found").classList.remove("hidden");
-  } else {
-    document.getElementById("projects-case").classList.add("grid");
-    document.getElementById("not-found").classList.add("hidden");
-  }
-}
-
-function filterProjectsBy(filters) {
-  const projectArray = Object.values(config.value.projects);
-  return projectArray.filter((project) => {
-    return filters.some((filter) => project.tech.includes(filter.id));
-  });
 }
 </script>
 

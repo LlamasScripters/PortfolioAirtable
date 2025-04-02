@@ -2,7 +2,7 @@
   <img
     :src="tech.icon"
     :alt="tech.name"
-    class="w-6 h-6 mx-1 hover:opacity-75"
+    class="w-6 h-6 object-contain mx-1 hover:opacity-75"
   />
 </template>
 

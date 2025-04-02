@@ -19,6 +19,7 @@
     "aos": "^2.3.4",
     "axios": "^1.8.3",
     "bcryptjs": "^3.0.2",
-    "highlight.js": "^11.7.0"
+    "highlight.js": "^11.7.0",
+    "zod": "3.24.2"
   }
 }

@@ -7,7 +7,7 @@
       <h3 v-else class="text-purplefy font-fira_bold mr-3">
         Project {{ index + 1 }}
       </h3>
-      <h4 class="font-fira_retina text-menu-text">// {{ project.title }}</h4>
+      <h4 class="font-fira_retina text-menu-text">// {{ project.name }}</h4>
     </span>
 
     <div id="project-card" class="flex flex-col">
