@@ -36,7 +36,7 @@
  * Promotion: string[],
  * Etudiant: string[],
  * 'Catégories': string[],
- * IsProjetVisible: string,
+ * IsProjetVisible: boolean,
  * 'Nombre de like': number,
  * Visuels: AirtableImage[],
  * }
@@ -53,6 +53,7 @@
  * url: string,
  * promotion: string,
  * likes: number
+ * visible: boolean
  * }} Project
  */
 
@@ -71,5 +72,6 @@ export function mapAirtableProjetToProject(airtableProjet) {
     url: airtableProjet.fields["Lien Projet"],
     promotion: airtableProjet.fields.Promotion[0] ?? "N/A",
     likes: airtableProjet.fields["Nombre de like"],
+    visible: airtableProjet.fields.IsProjetVisible,
   };
 }

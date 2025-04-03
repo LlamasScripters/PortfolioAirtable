@@ -14,6 +14,7 @@ const projectsQuerySchema = z.object({
  */
 
 export default defineEventHandler(async (event) => {
+  // const authorizationHeader = getRequestHeader(event, "Authorization")
   const queryParseResult = await getValidatedQuery(event, (query) =>
     projectsQuerySchema.safeParse(query)
   );
@@ -25,14 +26,16 @@ export default defineEventHandler(async (event) => {
     return [];
   }
 
-  const { technologies } = queryParseResult.data;
+  const technologies = await $fetch("/api/technologies");
+
+  const query = queryParseResult.data;
 
   const queryOptions = {
     view: airtableConfig.tables.Projet.views.default,
   };
 
-  if (technologies && technologies.length > 0) {
-    const technologyFilters = technologies.map(
+  if (query.technologies && query.technologies.length > 0) {
+    const technologyFilters = query.technologies.map(
       (tech) => `FIND('${tech}', ARRAYJOIN({Technologies}, ",")) > 0`
     );
 
@@ -40,12 +43,19 @@ export default defineEventHandler(async (event) => {
   }
 
   const airtableProjects = await airtable(airtableConfig.tables.Projet.id)
-    .select(queryOptions)
+    .select({
+      ...queryOptions,
+    })
     .all();
 
-  const projects = airtableProjects.map((airtableProject) =>
-    mapAirtableProjetToProject(airtableProject)
-  );
+  const projects = airtableProjects
+    .map((airtableProject) => mapAirtableProjetToProject(airtableProject))
+    .map((project) => ({
+      ...project,
+      technologies: project.technologies.map((tech) =>
+        technologies.find((t) => t.id === tech)
+      ),
+    }));
 
   return projects;
 });

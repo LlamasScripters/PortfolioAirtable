@@ -12,6 +12,7 @@ export const useProjects = async (options = {}) => {
 
   const projectsFetchResult = await useFetch("/api/projects", {
     query,
+    key: "projects",
   });
 
   return projectsFetchResult;
