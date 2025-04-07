@@ -1,7 +1,6 @@
 <template>
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600">
         <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-white">
           {{ mode === 'login' ? 'Connexion' : 'Inscription' }}
         </h2>
@@ -30,16 +29,24 @@
             <input v-model="password" required type="password" class="block w-full rounded-md border py-1.5 px-3">
           </div>
   
-          <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded">
+          <button
+            type="submit"
+            class="w-full bg-transparent border border-[#1E2D3D] hover:bg-[#1E2D3D] text-white py-2 rounded transition-colors duration-200"
+          >
             {{ mode === 'login' ? 'Se connecter' : 'S\'inscrire' }}
           </button>
+
         </form>
   
-        <p class="mt-6 text-center text-sm text-gray-500">
-          <a @click.prevent="toggleMode" class="text-indigo-600 cursor-pointer">
+        <p class="mt-6 text-center text-sm text-gray-400">
+          <a
+            @click.prevent="toggleMode"
+            class="text-[#879BB2] hover:text-white transition-colors duration-200 cursor-pointer"
+          >
             {{ mode === 'login' ? 'Pas encore inscrit ?' : 'Déjà inscrit ?' }}
           </a>
         </p>
+
       </div>
     </div>
   </template>
