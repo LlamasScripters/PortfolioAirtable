@@ -424,30 +424,16 @@ const toggleVisibility = useDebounceFn(async (projectId) => {
 }, 500);
 
 const openCommentModal = async (projectId) => {
+  showCommentModal.value = true;
   currentProjectId.value = projectId;
 
-  // récupération des commentaires pour ce projet
+  // Récupérer les commentaires du projet actuel
   try {
-    // exemple données mockées
-    // à remplacer soon par un appel API Airtable
-    projectComments.value = [
-      {
-        author: "Jean Dupont",
-        date: "2023-05-15T10:30:00",
-        text: "Le design est superbe, mais il faudrait améliorer la performance sur mobile.",
-      },
-      {
-        author: "Marie Martin",
-        date: "2023-05-16T14:20:00",
-        text: "Très bon travail sur l'intégration des APIs externes.",
-      },
-    ];
+    const response = await $fetch(`/api/projects/${projectId}/comments`);
+    projectComments.value = response.comments || [];
   } catch (error) {
     console.error("Erreur lors de la récupération des commentaires:", error);
-    projectComments.value = [];
   }
-
-  showCommentModal.value = true;
 };
 
 const closeCommentModal = () => {
@@ -461,21 +447,16 @@ const addComment = async () => {
   if (!newComment.value.trim()) return;
 
   try {
-    // exemple données mockées
-    // à remplacer soon par un appel API Airtable
-    const newCommentObj = {
-      author: "Utilisateur actuel",
-      date: new Date().toISOString(),
-      text: newComment.value,
-    };
+    await $fetch(`/api/projects/${currentProjectId.value}/comments`, {
+      method: "post",
+      body: { text: newComment.value },
+    });
 
-    projectComments.value.push(newCommentObj);
+    // Réinitialiser le champ de commentaire
     newComment.value = "";
 
-    console.log(
-      `Commentaire ajouté au projet ${currentProjectId.value}:`,
-      newCommentObj
-    );
+    // Rafraîchir la liste des commentaires
+    await openCommentModal(currentProjectId.value);
   } catch (error) {
     console.error("Erreur lors de l'ajout du commentaire:", error);
   }
