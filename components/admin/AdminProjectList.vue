@@ -449,7 +449,7 @@ const addComment = async () => {
   try {
     await $fetch(`/api/projects/${currentProjectId.value}/comments`, {
       method: "post",
-      body: { text: newComment.value },
+      body: { content: newComment.value },
     });
 
     // Réinitialiser le champ de commentaire
