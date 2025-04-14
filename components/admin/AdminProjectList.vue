@@ -284,10 +284,10 @@
             class="comment"
           >
             <div class="comment-header">
-              <div class="comment-author">{{ comment.author }}</div>
-              <div class="comment-date">{{ formatDate(comment.date) }}</div>
+              <div class="comment-author">{{ comment.fields["Nom Complet Utilisateur"] }}</div>
+              <div class="comment-date">{{ formatDate(comment.fields["Date de création"]) }}</div>
             </div>
-            <div class="comment-text">{{ comment.text }}</div>
+            <div class="comment-text">{{ comment.fields["Contenu"] }}</div>
           </div>
         </div>
 
@@ -385,7 +385,7 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
     .toString()
-    .padStart(2, "0")}/${date.getFullYear()}`;
+    .padStart(2, "0")}/${date.getFullYear()} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 };
 
 // applique un filtre (tous, visibles, cachés)
