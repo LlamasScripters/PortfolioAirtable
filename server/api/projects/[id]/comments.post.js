@@ -3,7 +3,13 @@ import { z } from "zod";
 import AirtableError from "airtable/lib/airtable_error";
 
 const createCommentBodySchema = z.object({
-    content: z.string().min(1, "Commentaire requis"),
+    contenu: z.string().min(1, "Commentaire requis"),
+    user: z.object({
+        id: z.string().min(1, "ID utilisateur requis"),
+        nom: z.string().min(1, "Nom requis"),
+        prenom: z.string().min(1, "Prénom requis"),
+        role: z.array(z.string()).min(1, "Rôle requis"),
+    }).optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -26,8 +32,12 @@ export default defineEventHandler(async (event) => {
     const body = bodyParseResult.data;
 
     try {
-        const record = await airtable("Projet").find(id);
+        const { user, contenu } = body;
+        if (!user.role.includes("Administrateur")) {
+            throw createError({ statusCode: 403, statusMessage: "Accès refusé" });
+        }
 
+        const record = await airtable("Projet").find(id);
         if (!record) {
             throw createError({
                 statusCode: 404,
@@ -35,15 +45,14 @@ export default defineEventHandler(async (event) => {
             });
         }
 
-        const comments = record.get("Commentaires") || [];
+        const newComment = await airtable("tblqtA6q0zT4bpCXQ").create({ 
+            fldcSvBzLfDrZwxsh: contenu,
+            fldiWk9BsRrwbIav6: [record.id],
+            fldJ8TBUIChUKhVOi: [user.id],
+        })
 
-        comments.push(body.content);
+        return newComment;
 
-        await record.update({
-            Commentaires: comments,
-        });
-
-        return comments;
     } catch (error) {
         if (error instanceof AirtableError) {
             throw createError({
@@ -52,5 +61,4 @@ export default defineEventHandler(async (event) => {
             });
         }
     }
-}
-);
+});

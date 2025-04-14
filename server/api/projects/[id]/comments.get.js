@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const comments = record.get("Commentaires") || [];
+    const comments = record.get("CommentairesProjet") || [];
 
     return comments;
   } catch (error) {

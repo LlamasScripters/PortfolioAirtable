@@ -445,11 +445,15 @@ const closeCommentModal = () => {
 // ajout un commentaire au projet actuel
 const addComment = async () => {
   if (!newComment.value.trim()) return;
-
+  
   try {
+    const userData = localStorage.getItem("user");
     await $fetch(`/api/projects/${currentProjectId.value}/comments`, {
       method: "post",
-      body: { content: newComment.value },
+      body: { 
+        contenu: newComment.value, 
+        user: userData ? JSON.parse(userData) : null
+       },
     });
 
     // Réinitialiser le champ de commentaire
