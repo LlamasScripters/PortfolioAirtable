@@ -284,10 +284,30 @@
             class="comment"
           >
             <div class="comment-header">
-              <div class="comment-author">{{ comment.fields["Nom Complet Utilisateur"] }}</div>
-              <div class="comment-date">{{ formatDate(comment.fields["Date de création"]) }}</div>
+              <div class="comment-author">{{ comment.fields['Nom Complet Utilisateur'] }}</div>
+              <div class="comment-date">{{ formatDate(comment.fields['Date de création']) }}</div>
             </div>
-            <div class="comment-text">{{ comment.fields["Contenu"] }}</div>
+            <div class="comment-text">{{ comment.fields['Contenu'] }}</div>
+            <button
+              class="delete-comment"
+              @click="deleteComment(comment.id)"
+              v-if="isAdminIsCommentAuthor(comment.fields['Nom Complet Utilisateur'])"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 4H8l-2 2H1v2h1l2 14h14l2-14h1V6h-1z"></path>
+                <path d="M7 10h10"></path>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -303,8 +323,8 @@
         <button class="close-modal" @click="closeCommentModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -464,6 +484,28 @@ const addComment = async () => {
   } catch (error) {
     console.error("Erreur lors de l'ajout du commentaire:", error);
   }
+};
+
+// supprime un commentaire
+const deleteComment = async (commentId) => {
+  try {
+    await $fetch(`/api/projects/${currentProjectId.value}/comments/${commentId}`, {
+      method: "delete",
+    });
+
+    // Rafraîchir la liste des commentaires
+    await openCommentModal(currentProjectId.value);
+  } catch (error) {
+    console.error("Erreur lors de la suppression du commentaire:", error);
+  }
+};
+
+// vérifie si le est de l'admin
+const isAdminIsCommentAuthor = (commentAuthor) => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userFullName = `${userData.nom} ${userData.prenom}`;
+
+  return userFullName === commentAuthor;
 };
 
 // affichage d'un message lorsqu'aucun projet n'est trouvé
@@ -909,6 +951,23 @@ const getNoProjectsMessage = () => {
 }
 
 .close-modal:hover {
+  color: #e5e9f0;
+}
+.delete-comment {
+  background: none;
+  border: none;
+  color: #607b96;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.delete-comment:hover {
+  color: #e5e9f0;
+}
+.delete-comment svg {
+  width: 16px;
+  height: 16px;
+}
+.delete-comment:hover svg {
   color: #e5e9f0;
 }
 </style>
