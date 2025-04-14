@@ -19,9 +19,23 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const comments = record.get("CommentairesProjet") || [];
+    const commentsrecords = await airtable('CommentairesProjet').select({
+      filterByFormula: `{Nom Projet} = "${record.fields.Nom}"`
+    }).firstPage();
 
-    return comments;
+    // const commentsrecords = await airtable('CommentairesProjet').select({
+    //   filterByFormula: `SEARCH("${id}", {Projet})`,
+    // }).firstPage();
+
+    const comments = commentsrecords.map((record) => {
+      return {
+        id: record.id,
+        fields: record.fields,
+      };
+    });
+    
+    return {comments: comments};
+    
   } catch (error) {
     if (error instanceof AirtableError) {
       throw createError({
