@@ -281,13 +281,49 @@
             v-else
             v-for="(comment, index) in projectComments"
             :key="index"
-            class="comment"
+            class="comment-modal"
           >
             <div class="comment-header">
               <div class="comment-author">{{ comment.fields['Nom Complet Utilisateur'] }}</div>
               <div class="comment-date">{{ formatDate(comment.fields['Date de création']) }}</div>
             </div>
-            <div class="comment-text">{{ comment.fields['Contenu'] }}</div>
+            <div class="comment-content">
+              <div v-if="!comment.isEditing" class="comment-text-display">
+              {{ comment.fields['Contenu'] }}
+              <button 
+                v-if="isAdminIsCommentAuthor(comment.fields['Nom Complet Utilisateur'])"
+                class="edit-button" 
+                @click="comment.isEditing = true"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              </div>
+              <div v-else class="comment-edit-form">
+              <textarea
+                v-model="comment.fields['Contenu']"
+                class="comment-textarea"
+                rows="3"
+                @keyup.esc="comment.isEditing = false"
+              ></textarea>
+              <div class="comment-edit-actions">
+                <button 
+                class="save-button"
+                @click="updateComment(comment.id, comment.fields['Contenu']); comment.isEditing = false"
+                >
+                Enregistrer
+                </button>
+                <button 
+                class="cancel-button"
+                @click="comment.isEditing = false"
+                >
+                Annuler
+                </button>
+              </div>
+              </div>
+            </div>
             <button
               class="delete-comment"
               @click="deleteComment(comment.id)"
@@ -483,6 +519,21 @@ const addComment = async () => {
     await openCommentModal(currentProjectId.value);
   } catch (error) {
     console.error("Erreur lors de l'ajout du commentaire:", error);
+  }
+};
+
+// mettre à jour le contenu d'un commentaire
+const updateComment = async (commentId, newContent) => {
+  try {
+    await $fetch(`/api/projects/${currentProjectId.value}/comments/${commentId}`, {
+      method: "patch",
+      body: { id: commentId, contenu: newContent },
+    });
+
+    // Rafraîchir la liste des commentaires
+    await openCommentModal(currentProjectId.value);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du commentaire:", error);
   }
 };
 
@@ -968,6 +1019,89 @@ const getNoProjectsMessage = () => {
   height: 16px;
 }
 .delete-comment:hover svg {
+  color: #e5e9f0;
+}
+.comment-modal {
+  background-color: #011221;
+  border: 1px solid #1e2d3d;
+  border-radius: 4px;
+  padding: 1rem;
+}
+.comment-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.comment-textarea {
+  background-color: #011221;
+  border: 1px solid #1e2d3d;
+  border-radius: 4px;
+  padding: 0.75rem;
+  color: #e5e9f0;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+}
+.comment-textarea:focus {
+  outline: none;
+  border-color: #43d9ad;
+}
+.comment-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+.save-button {
+  background-color: #43d9ad;
+  color: #01080e;
+  border: none;
+  border-radius: 4px;
+  padding: 0.625rem 1rem;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.save-button:hover {
+  background-color: #4fe0b6;
+}
+.cancel-button {
+  background-color: #e5e9f0;
+  color: #01080e;
+  border: none;
+  border-radius: 4px;
+  padding: 0.625rem 1rem;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.cancel-button:hover {
+  background-color: #f0f4f8;
+}
+.comment-text-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Fira Code Retina';
+  font-size: 0.875rem;
+}
+.comment-text-display .edit-button {
+  background: none;
+  border: none;
+  color: #607b96;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.comment-text-display .edit-button:hover {
+  color: #e5e9f0;
+}
+.comment-text-display .edit-button svg {
+  width: 16px;
+  height: 16px;
+}
+.comment-text-display .edit-button:hover svg {
   color: #e5e9f0;
 }
 </style>
