@@ -20,6 +20,7 @@ export const airtableConfig = {
     },
     Utilisateur: "tblXBbJeIuDATbZ0r",
     Technologie: "tbleKvC3U1t4pElc1",
+    CommentairesProjet: "tblqtA6q0zT4bpCXQ",
   },
 };
 
