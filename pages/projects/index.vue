@@ -148,6 +148,7 @@ import { ref, computed, watch } from "vue";
 const filters = ref([{ id: null, name: "all" }]);
 const showFilters = ref(true);
 const isLoading = ref(false);
+const token = ref(null);
 
 // Fetch technologies
 const {
@@ -167,7 +168,8 @@ const fetchProjects = async () => {
   isLoading.value = true;
   try {
     const { data, error } = await useProjects({
-      technologies: selectedTechNames.value,
+      searchParams: { technologies: selectedTechNames.value },
+      token: token.value,
     });
 
     projects.value = data.value;
@@ -214,6 +216,10 @@ function filterProjects(tech) {
     }
   }
 }
+
+onBeforeMount(() => {
+  token.value = localStorage.getItem("token");
+});
 </script>
 
 <style>

@@ -13,9 +13,9 @@ export const airtableConfig = {
     Projet: {
       id: "tbleuWV8Bu2aaPIFq",
       views: {
-        default: "viwgbC7Ro9qXhX6h5",
-        active: "viwhEvK5Q5gXQs6Gn",
-        inactive: "viw2DtYGd2DERnbl2",
+        all: "viwgbC7Ro9qXhX6h5",
+        onlyVisible: "viwhEvK5Q5gXQs6Gn",
+        onlyNonVisible: "viwjNyOt1SEHindDc",
       },
     },
     Utilisateur: "tblXBbJeIuDATbZ0r",

@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { mapAirtableProjetToProject } from "./map-airtable-projet-to-project";
+import { checkIsAdmin } from "~/utils/auth/check-is-admin";
+import { checkToken } from "../../utils/auth/check-token";
 
 const projectsQuerySchema = z.object({
   technologies:
@@ -7,6 +9,12 @@ const projectsQuerySchema = z.object({
     z
       .union([z.string().transform((str) => [str]), z.array(z.string())])
       .optional(),
+  show: z.enum(["all", "onlyVisible", "onlyNonVisible"]).default("all"),
+});
+
+const payloadSchema = z.object({
+  id: z.string(),
+  role: z.array(z.string()),
 });
 
 /**
@@ -14,7 +22,15 @@ const projectsQuerySchema = z.object({
  */
 
 export default defineEventHandler(async (event) => {
-  // const authorizationHeader = getRequestHeader(event, "Authorization")
+  const { JWT_SECRET } = useRuntimeConfig(event);
+  const token = getCookie(event, "token");
+
+  const payload = await checkToken(token, JWT_SECRET);
+
+  const isValidPayload = payloadSchema.safeParse(payload).success;
+
+  const isAdmin = isValidPayload && checkIsAdmin(payload);
+
   const queryParseResult = await getValidatedQuery(event, (query) =>
     projectsQuerySchema.safeParse(query)
   );
@@ -26,12 +42,17 @@ export default defineEventHandler(async (event) => {
     return [];
   }
 
-  const technologies = await $fetch("/api/technologies");
-
   const query = queryParseResult.data;
 
+  /**
+   * Admin can see all projects, but non-admin can only see visible projects
+   */
+  const projectViewName = isAdmin ? query.show : "onlyVisible";
+
+  const technologies = await $fetch("/api/technologies");
+
   const queryOptions = {
-    view: airtableConfig.tables.Projet.views.default,
+    view: airtableConfig.tables.Projet.views[projectViewName],
   };
 
   if (query.technologies && query.technologies.length > 0) {

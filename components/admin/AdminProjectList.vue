@@ -20,7 +20,6 @@
           type="text"
           placeholder="Rechercher un projet..."
           v-model="searchQuery"
-          @input="filterProjects"
         />
       </div>
 
@@ -284,50 +283,77 @@
             class="comment-modal"
           >
             <div class="comment-header">
-              <div class="comment-author">{{ comment.fields['Nom Complet Utilisateur'] }}</div>
-              <div class="comment-date">{{ formatDate(comment.fields['Date de création']) }}</div>
+              <div class="comment-author">
+                {{ comment.fields["Nom Complet Utilisateur"] }}
+              </div>
+              <div class="comment-date">
+                {{ formatDate(comment.fields["Date de création"]) }}
+              </div>
             </div>
             <div class="comment-content">
               <div v-if="!comment.isEditing" class="comment-text-display">
-              {{ comment.fields['Contenu'] }}
-              <button 
-                v-if="isAdminIsCommentAuthor(comment.fields['Nom Complet Utilisateur'])"
-                class="edit-button" 
-                @click="comment.isEditing = true"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </button>
+                {{ comment.fields["Contenu"] }}
+                <button
+                  v-if="
+                    isAdminIsCommentAuthor(
+                      comment.fields['Nom Complet Utilisateur']
+                    )
+                  "
+                  class="edit-button"
+                  @click="comment.isEditing = true"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                    />
+                    <path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                    />
+                  </svg>
+                </button>
               </div>
               <div v-else class="comment-edit-form">
-              <textarea
-                v-model="comment.fields['Contenu']"
-                class="comment-textarea"
-                rows="3"
-                @keyup.esc="comment.isEditing = false"
-              ></textarea>
-              <div class="comment-edit-actions">
-                <button 
-                class="save-button"
-                @click="updateComment(comment.id, comment.fields['Contenu']); comment.isEditing = false"
-                >
-                Enregistrer
-                </button>
-                <button 
-                class="cancel-button"
-                @click="comment.isEditing = false"
-                >
-                Annuler
-                </button>
-              </div>
+                <textarea
+                  v-model="comment.fields['Contenu']"
+                  class="comment-textarea"
+                  rows="3"
+                  @keyup.esc="comment.isEditing = false"
+                ></textarea>
+                <div class="comment-edit-actions">
+                  <button
+                    class="save-button"
+                    @click="
+                      updateComment(comment.id, comment.fields['Contenu']);
+                      comment.isEditing = false;
+                    "
+                  >
+                    Enregistrer
+                  </button>
+                  <button
+                    class="cancel-button"
+                    @click="comment.isEditing = false"
+                  >
+                    Annuler
+                  </button>
+                </div>
               </div>
             </div>
             <button
               class="delete-comment"
               @click="deleteComment(comment.id)"
-              v-if="isAdminIsCommentAuthor(comment.fields['Nom Complet Utilisateur'])"
+              v-if="
+                isAdminIsCommentAuthor(
+                  comment.fields['Nom Complet Utilisateur']
+                )
+              "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -380,17 +406,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
-
+const { $fetch } = useNuxtApp();
 const emit = defineEmits(["edit-project", "create-project"]);
 
-// states
-const {
-  data,
-  status,
-  execute: fetchProjects,
-} = useFetch("/api/projects", {
-  key: "projects",
-});
+const { data, status } = useProjects("/api/projects");
+
 const isLoading = computed(() => status.value === "pending");
 const projects = computed(() => data.value);
 const searchQuery = ref("");
@@ -400,10 +420,6 @@ const currentProjectId = ref(null);
 const projectComments = ref([]);
 const newComment = ref("");
 const isUpdatingProject = ref(false);
-
-onBeforeMount(async () => {
-  await fetchProjects();
-});
 
 // Liste des projets filtrés selon les critères de recherche et de filtre
 const filteredProjects = computed(() => {
@@ -441,7 +457,10 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
     .toString()
-    .padStart(2, "0")}/${date.getFullYear()} ${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+    .padStart(2, "0")}/${date.getFullYear()} ${date
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 };
 
 // applique un filtre (tous, visibles, cachés)
@@ -501,15 +520,15 @@ const closeCommentModal = () => {
 // ajout un commentaire au projet actuel
 const addComment = async () => {
   if (!newComment.value.trim()) return;
-  
+
   try {
     const userData = localStorage.getItem("user");
     await $fetch(`/api/projects/${currentProjectId.value}/comments`, {
       method: "post",
-      body: { 
-        contenu: newComment.value, 
-        user: userData ? JSON.parse(userData) : null
-       },
+      body: {
+        contenu: newComment.value,
+        user: userData ? JSON.parse(userData) : null,
+      },
     });
 
     // Réinitialiser le champ de commentaire
@@ -525,10 +544,13 @@ const addComment = async () => {
 // mettre à jour le contenu d'un commentaire
 const updateComment = async (commentId, newContent) => {
   try {
-    await $fetch(`/api/projects/${currentProjectId.value}/comments/${commentId}`, {
-      method: "patch",
-      body: { id: commentId, contenu: newContent },
-    });
+    await $fetch(
+      `/api/projects/${currentProjectId.value}/comments/${commentId}`,
+      {
+        method: "patch",
+        body: { id: commentId, contenu: newContent },
+      }
+    );
 
     // Rafraîchir la liste des commentaires
     await openCommentModal(currentProjectId.value);
@@ -540,9 +562,12 @@ const updateComment = async (commentId, newContent) => {
 // supprime un commentaire
 const deleteComment = async (commentId) => {
   try {
-    await $fetch(`/api/projects/${currentProjectId.value}/comments/${commentId}`, {
-      method: "delete",
-    });
+    await $fetch(
+      `/api/projects/${currentProjectId.value}/comments/${commentId}`,
+      {
+        method: "delete",
+      }
+    );
 
     // Rafraîchir la liste des commentaires
     await openCommentModal(currentProjectId.value);
@@ -1084,7 +1109,7 @@ const getNoProjectsMessage = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Fira Code Retina';
+  font-family: "Fira Code Retina";
   font-size: 0.875rem;
 }
 .comment-text-display .edit-button {

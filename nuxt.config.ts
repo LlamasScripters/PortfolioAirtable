@@ -1,13 +1,12 @@
-const config = require('./developer.json')
-const siteTitle = `${config.name} | ${config.role}`
-
+const config = require("./developer.json");
+const siteTitle = `${config.name} | ${config.role}`;
 
 /*
  * Nuxt 3 Config File
  Usage: https://nuxt.com/docs/api/configuration/nuxt-config
  */
 export default defineNuxtConfig({
-  compatibilityDate: '2025-02-28',
+  compatibilityDate: "2025-02-28",
   devtools: { enabled: true },
   /**
    * * App Config
@@ -22,18 +21,30 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: {
-        lang: 'en', // App language
+        lang: "fr", // App language
       },
       title: "Portfolio", // App window nav title
       meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: 'A awesome developer portfolio design.' },
-        { hid: 'og:title', property: 'og:title', content: "Portfolio" },
-        { hid: 'og:description', property: 'og:description', content: 'A awesome developer portfolio design.' },
-        { hid: 'og:image', property: 'og:image', content: 'demo-share.jpg' },
-        { hid: 'og:url', property: 'og:url', content: 'https://developer-portfolio-v1.netlify.app/' },
-        { name: 'theme-color', content: '#010C15' },
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          hid: "description",
+          name: "description",
+          content: "A awesome developer portfolio design.",
+        },
+        { hid: "og:title", property: "og:title", content: "Portfolio" },
+        {
+          hid: "og:description",
+          property: "og:description",
+          content: "A awesome developer portfolio design.",
+        },
+        { hid: "og:image", property: "og:image", content: "demo-share.jpg" },
+        {
+          hid: "og:url",
+          property: "og:url",
+          content: "https://developer-portfolio-v1.netlify.app/",
+        },
+        { name: "theme-color", content: "#010C15" },
       ],
     },
   },
@@ -42,24 +53,20 @@ export default defineNuxtConfig({
    * * Nuxt 3 Modules
    * Official modules: https://nuxt.com/modules
    */
-  modules: [
-    '@nuxtjs/tailwindcss',
-  ],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-csurf"],
 
   components: {
-    dirs: [
-      '~/components',
-    ],
+    dirs: ["~/components"],
   },
-  
+
   /**
    * * Tailwind CSS Config
    * Options: https://tailwindcss.nuxt.dev/getting-started/options/
    * Docs: https://tailwindcss.nuxt.dev
    */
   tailwindcss: {
-    cssPath: '~/assets/tailwind.css',
-    configPath: 'tailwind.config',
+    cssPath: "~/assets/tailwind.css",
+    configPath: "tailwind.config",
     exposeConfig: true, // true to resolve the tailwind config in runtime. https://tailwindcss.nuxt.dev/getting-started/options/#exposeconfig
     injectPosition: 0,
     viewer: false,
@@ -72,5 +79,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Keys within public are also exposed client-side
     AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
-  }
-})
+    JWT_SECRET: process.env.JWT_SECRET,
+  },
+});

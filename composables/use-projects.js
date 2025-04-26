@@ -1,8 +1,10 @@
 /**
- * @param {import("~/server/api/projects/index.get").ProjectsQuery} options
+ * @param {import("~/server/api/projects/index.get").ProjectsQuery} searchParams
  */
-export const useProjects = async (options = {}) => {
-  const { technologies = [] } = options;
+export const useProjects = (searchParams = {}) => {
+  const { technologies = [] } = searchParams;
+
+  const headers = useRequestHeaders(["cookie"]);
 
   const query = {};
 
@@ -10,9 +12,10 @@ export const useProjects = async (options = {}) => {
     query.technologies = technologies;
   }
 
-  const projectsFetchResult = await useFetch("/api/projects", {
+  const projectsFetchResult = useFetch("/api/projects", {
     query,
     key: "projects",
+    headers,
   });
 
   return projectsFetchResult;
