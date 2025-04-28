@@ -1,86 +1,150 @@
-<h1 align="center">
-  developer-portfolio-v2
-</h1>
-<p align="center">
-  The first open source version of <a href="https://www.figma.com/community/file/1100794861710979147" target="_blank"> Portfolio for Developers Concept V.2</a>, designed by <a href="https://www.behance.net/darelova" target="_blank">@darelova</a> and developed by <a href="https://github.com/alexdeploy">@alexdeploy</a>. Built with <a href="https://nuxt.com/" target="_blank">Nuxt.js 3.0</a> and hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>.
-</p>
-<div align="center">
+# Portfolio LlamasScripters
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/6fa55804-6799-419f-9222-359ba49c5e4c/deploy-status)](https://app.netlify.com/sites/developer-portfolio-v2/deploys)
+Ce projet est un portfolio permettant de présenter les projets du groupe LlamasScripters. Il comprend une interface publique de consultation et une interface d'administration.
 
-</div>
+## Membres du groupe
 
-<p align="center">
-  <a href="" target="_blank">
-    <img src="./public/images/demo-share.png" />
-  </a>
-</p>
+- [Sami ASSIAKH] - [@iSaaMz]
+- [Moustapha CHEGDALI] - [@mchegdali]
+- [Aria AMAN] - [@AriaAman]
+- [Moussa Seydou TRAORE] - [@MoussaST]
 
-## 🚨 Forking this repo
+## Technologies utilisées
 
-Feel free to fork this repository and make it your own! You can use it as a starting point for your own portfolio website. However, please note that the effort and time deserves to be recognized and *plagiarism is a bad practice*. If you use this project, we would greatly appreciate it if you give credits to the designer <a href="https://www.behance.net/darelova" target="_blank">@darelova</a> and the developer <a href="https://github.com/alexdeploy">@alexdeploy</a>, or linking <a href="https://github.com/alexdeploy/developer-portfolio-v2">this repo</a>.
+### Frontend
+- **Nuxt.js 3** - Framework Vue.js pour le développement d'applications web
+- **Tailwind CSS** - Framework CSS utilitaire
 
-Thanks 🤘 and enjoy it!
+### Backend
+- **Nuxt Server API** - API côté serveur intégrée à Nuxt
+- **Airtable** - Base de données en tant que service
+- **bcrypt** - Bibliothèque pour le hashage de mots de passe
 
-## 🛠 Installation
+### Autres
+- **ESLint** - Linter pour JavaScript
+- **Axios** - Client HTTP
 
-1. Clone the project to your local machine.
+## Prérequis
 
-```sh
-git clone https://github.com/alexdeploy/developer-portfolio-v2.git
+- Node.js
+- npm
+- Un compte Airtable
+
+## Installation
+
+1. Cloner le dépôt :
+   ```bash
+   git clone https://github.com/LlamasScripters/PortfolioAirtable.git
+   cd PortfolioAirtable
+   ```
+
+2. Installer les dépendances :
+   ```bash
+   npm install
+   ```
+
+3. A partir du fichier `.env.example`, créer un fichier `.env` à la racine du projet avec les variables suivantes :
+   ```
+   # Airtable
+   AIRTABLE_API_KEY=
+
+   # Secret JWT
+   JWT_SECRET=
+   
+   # Configuration application
+   API_BASE_URL=http://localhost:3000
+   ```
+
+## Lancement du projet
+
+### Développement
+
+Pour lancer le serveur de développement :
+
+```bash
+npm run dev
 ```
 
-2. Navigate to the project directory
+L'application sera accessible à l'adresse : http://localhost:3000
 
-```sh
-cd developer-portfolio-v2
+### Production
+
+Pour construire l'application pour la production :
+
+```bash
+npm run build
 ```
 
-3. Install the required dependencies
+Pour lancer l'application en mode production :
 
-```sh
-yarn
+```bash
+npm run start
 ```
 
-4. Start the development server
+## Structure Airtable
 
-```sh
-yarn dev
+Le projet est structuré sous une base Airtable avec les tables suivantes :
+
+### Table `Projet`
+- `Nom` (Texte) - Nom du projet
+- `Description` (Texte long) - Description détaillée
+- `Lien Projet` (URL) - Lien vers le projet en ligne
+- `Etudiant` (Lien vers Utilisateur) - Étudiants associés
+- `Technologies` (Lien vers Technologie) - Technologies utilisées
+- `Promotion` (Lien vers Promotion) - Promotion associée
+- `Nombre de like` (Nombre) - Nombre de likes
+- `Catégories` (Sélection multiple) - Catégories du projet
+- `Visuels` (Pièces jointes) - Images du projet
+- `IsProjetVisible` (Sélection simple) - True/False
+- `CommentairesProjets`(Lien vers CommentairesProjet) - Commentaires des projets
+
+### Table `Utilisateur`
+- `Nom` (Texte)
+- `Prenom` (Texte)
+- `Email` (Email)
+- `Photo` (Pièce jointe)
+- `Password` (Texte) - Mot de passe hashé
+- `Rôle` (Sélection multiple) - Administrateur/Etudiant
+
+### Table `Technologie`
+- `Nom` (Texte) - Nom de la technologie
+- `Icône` (Pièce jointe) - Icône de la technologie
+- `Projet` (Lien vers Projet) - Lien vers le projet en ligne 
+
+### Table `Promotion`
+- `Ǹom` (Formule) - Nom de la promotion
+- `Année` (Séléction unique) - Nom de l'année
+- `Ecole` (Sélection unique) - Nom de l'école
+- `Filiere` (Formule) - Nom de la promotion
+- `Promo` (Sélection multiple) - Nom de la promotion
+- `Projet` (Lien vers Projet) - Lien vers le projet en ligne
+
+## Fonctionnalités principales
+
+### Interface publique
+- Visualisation de tous les projets publiés
+- Détail d'un projet avec informations associées
+- Possibilité de liker un projet
+- Recherche par mots-clés
+
+### Interface d'administration
+- Authentification sécurisée
+- Tableau de bord avec statistiques
+- Gestion des projets (création, modification, visibilité)
+- Ajout de commentaires sur les projets
+- Recherche et filtrage
+
+
+## Accès aux projets
+
+Les projets seront affichés à l'adresse : 
+```
+http://localhost:3000/projects
 ```
 
-5. The development server should now be running on <a href="http://localhost:3000/">http://localhost:3000/</a>
+## Accès à l'interface d'administration
 
-
-## ✒️ Customization
-
-The portfolio template includes some default content, but you can easily customize it to fit your needs. Here are some of the things you can change:
-
-* Update the `developer.json` file on root directory, which contains all the text for the project and the portfolio "user" information, including *projects*, *about-me*, *gists* (Ids) and *contact* info.
-
-* Update the `nuxt.config.ts` file for meta tags of website and some additional config.
-
-* Update the `public/pwa/manifest.json` file for PWA config.
-
-* Change the styling and design of the website to match your personal style.
-
-## 🚀 Building and Running for Production
-
-1. Generate a full static production build
-
-```sh
-yarn build
+Après avoir lancé l'application, l'interface d'administration est accessible à l'adresse :
 ```
-
-2. Preview the site as it will appear once deployed.
-
-```sh
-yarn preview
+http://localhost:3000/admin
 ```
-
-## Contributions
-
-If you find any bugs or have any suggestions, you can open an <a href="https://github.com/alexdeploy/developer-portfolio-v2/issues">issue</a>.
-
-## License
-
-This project is licensed under the MIT License. See the <a href="https://github.com/alexdeploy/developer-portfolio-v2/blob/main/LICENSE">LICENSE</a> file for more information.
