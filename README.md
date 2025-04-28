@@ -4,10 +4,11 @@ Ce projet est un portfolio permettant de présenter les projets du groupe Llamas
 
 ## Membres du groupe
 
-- [Sami ASSIAKH] - [@iSaaMz]
-- [Moustapha CHEGDALI] - [@mchegdali]
-- [Aria AMAN] - [@AriaAman]
-- [Moussa Seydou TRAORE] - [@MoussaST]
+- [Sami ASSIAKH] - [@iSaaMz](https://github.com/iSaaMz)
+- [Moustapha CHEGDALI] - [@mchegdali](https://github.com/mchegdali)
+- [Aria AMAN] - [@AriaAman](https://github.com/AriaAman)
+- [Moussa Seydou TRAORE] - [@MoussaST](https://github.com/MoussaST)
+
 
 ## Technologies utilisées
 
