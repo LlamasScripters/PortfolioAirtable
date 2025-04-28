@@ -53,7 +53,7 @@ export default defineNuxtConfig({
    * * Nuxt 3 Modules
    * Official modules: https://nuxt.com/modules
    */
-  modules: ["@nuxtjs/tailwindcss", "nuxt-csurf"],
+  modules: ["@nuxtjs/tailwindcss"],
 
   components: {
     dirs: ["~/components"],
