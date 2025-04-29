@@ -148,12 +148,19 @@ onMounted(async () => {
     // initialisation des catégories
     const categoriesMap = {}
     
-    // compte les projets par catégorie
+    // utilisation des technologies comme catégories + groupage des projets par technologies
     projects.forEach(project => {
-      if (project.categories && Array.isArray(project.categories)) {
-        project.categories.forEach(category => {
-          categoriesMap[category] = (categoriesMap[category] || 0) + 1
+      if (project.technologies && Array.isArray(project.technologies)) {
+        project.technologies.forEach(tech => {
+          if (tech && tech.name) {
+            categoriesMap[tech.name] = (categoriesMap[tech.name] || 0) + 1
+          } else if (typeof tech === 'string') {
+            categoriesMap[tech] = (categoriesMap[tech] || 0) + 1
+          }
         })
+      } else {
+        const defaultCategory = 'Sans technologie'
+        categoriesMap[defaultCategory] = (categoriesMap[defaultCategory] || 0) + 1
       }
     })
     
