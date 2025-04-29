@@ -20,7 +20,7 @@
 
       <NuxtLink id="nav-link-mobile" to="/about-me" :class="{ active: isActive('/about-me') }"
         @click="toggleMobileMenu()">
-        _about-me
+        _about-us
       </NuxtLink>
 
       <NuxtLink id="nav-link-mobile" to="/projects" :class="{ active: isActive('/projects') }"

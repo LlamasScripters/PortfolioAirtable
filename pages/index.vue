@@ -9,24 +9,18 @@
 		
 			<div class="head">
 				<span>
-					Hi all, I am
+					Bienvenue sur notre portfolio
 				</span>
 				<h1>Llama Scripter</h1>
         <span class="diple flex">
           >&nbsp;
-				<h2 class="line-1 anim-typewriter max-w-fit"> Full-Stack Developer </h2>
+				<h2 class="line-1 anim-typewriter max-w-fit"> Portfolio </h2>
         </span>
 			</div>
 
 			<div id="info">
 				<span class="action">
-					// complete the game to continue
-				</span>
-				<span :class="{hide: isMobile}">
-					// you can also see it on my Github page
-				</span>
-				<span :class="{hide: !isMobile}">
-					// find my profile on Github:
+					// Visitez notre GitHub
 				</span>
 				<p class="code">
 					<span class="identifier">

@@ -11,7 +11,7 @@
             </NuxtLink>
   
             <NuxtLink id="nav-link" to="/about-me" :class="{ active: isActive('/about-me') }">
-              _about-me
+              _about-us
             </NuxtLink>
   
             <NuxtLink id="nav-link" to="/projects" :class="{ active: isActive('/projects') }">

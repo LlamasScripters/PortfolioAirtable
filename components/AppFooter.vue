@@ -4,7 +4,7 @@
         <!-- social icons -->
         <div class="w-9/12 flex justify-between md:justify-start">
             <span id="social-title" class="h-full flex justify-center items-center border-right px-5">
-                find us in:
+                retrouvez nous sur :
             </span>
             <div id="social-icons" class="flex">
                 <a href="https://github.com/LlamasScripters" target="_blank"
